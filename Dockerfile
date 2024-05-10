@@ -9,6 +9,12 @@ RUN apt-get -qq update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# # Install Valgrind to test possible memory leak
+# RUN apt-get -qq update \
+# && apt-get -qq install --no-install-recommends valgrind \
+# && apt-get clean \
+# && rm -rf /var/lib/apt/lists/*
+
 # setup ssh for use ubuntu, password 1234
 RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1000 ubuntu 
 RUN  echo 'ubuntu:1234' | chpasswd
@@ -34,3 +40,6 @@ RUN make
 
 # CMD ["/usr/sbin/sshd","-D"]
 CMD ["./main"]
+# CMD ["valgrind", "--leak-check=full", "--show-leak-kinds=all", "--track-origins=yes", "./main"]
+# warning: although pass all the 31 unit test, you may have memory problem in your program
+# use the alternative CMD(valgrind) to check :)
